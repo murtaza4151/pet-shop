@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load CustomFilter %}
+
+{% block content %}
+
+         <h3>Your cart</h3>
+
+         {% for item in items %}
+
+         {% include 'cartProduct.html' with p=item.products%}
+         <h1>quantity::{{item.quantity}}</h1>
+         <form action="{% url 'updatecart' cartItemId=item.id %}">
+
+            <button type="button" onclick="updatequantity('{{item.id}}',-1)">-</button>
+            <input type="number" name="quantity" id="quantity-{{item.id}}" value="1">
+            <button type="button" onclick="updatequantity('{{item.id}}',1)">+</button>
+  
+      
+  
+           <button type="submit" class="btn btn-primary">UpdATE </button>
+          </button>
+        </form>
+        <button class="btn btn-primary" style="text-decoration: white;><a href="{% url 'deletecartItem' cartItemId=item.id %}">delete</a></button>
+
+
+        <script>
+         
+            function updatequantity (productId,operation)
+            {
+   
+             var quantityinput=document.getElementById("quantity-"+productId);
+             var currentqauntity=parseInt(quantityinput.value);
+   
+             var newquantity=currentqauntity+operation
+             quantityinput.value=newquantity;
+   
+            }
+           
+         
+         </script>
+
+
+
+
+         {% endfor %}
+
+         <table border="1" cellpadding="50">
+            <tr>
+            <th>product id</th>
+            <th>product name</th>
+            <th>quantity</th>
+            <th>Amount</th>
+            </tr>
+         
+            {%  for item in items %}
+         
+            <tr>
+               <th>{{item.products.id}}</th>
+               <th>{{item.products.product_name}}</th>
+               <th>{{item.quantity}}</th>
+               <th>{{item.products.product_price}}</th>
+               <th>{{item.products.product_price|multiply:item.quantity}}</th>
+         
+               </tr>
+         
+            {% endfor %}
+            <tr>
+               <th><td colspan="4"><h1>final Amount to pay: {{finalamount}}<button type="button" class="btn btn-primary"><a href="{% url 'checkout'%}" style="color:white">checkout</a></button></h1></td></th>
+            </tr>
+         
+         
+         
+         </table>
+
+{% endblock %}
+
+
